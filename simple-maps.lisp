@@ -1,3 +1,5 @@
+;;;; Print a simple, random map structure that you can populate with stuff yourself.
+
 (defparameter *surr* (list #C( 0 -1) #C(0  1) #C(-1  0) #C(1  0)
 			   #C(-1 -1) #C(1 -1) #C(-1  1) #C(1  1))
   "Complex modifiers to get the coords around a coord.")
