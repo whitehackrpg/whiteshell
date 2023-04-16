@@ -11,6 +11,7 @@
 
 
 (defun list-dims (list-o-strings)
+  "Return the x and y dimensions of a list of strings, and the list."
   (let ((count 0))
     (dolist (line list-o-strings 
 		  (values count (length list-o-strings) list-o-strings))
@@ -25,7 +26,8 @@
   (let* ((pen 0)
 	 (pens (1- (length pen-list))))
     (macrolet ((cell (n) `(blt:cell-char (realpart ,n) (imagpart ,n))))
-      (labels ((tick () (blt:print 0 0 (format nil "~a" pen-list))
+      (labels ((tick (xdim ydim) 
+		 (blt:print 0 0 (format nil "~a" pen-list))
 		 (blt:print (1+ (* pen 2)) 1 "_")
 		 (blt:refresh)
 		 (blt:print (1+ (* pen 2)) 1 " ")
@@ -51,7 +53,7 @@
 		       (t (setf (blt:layer) 1)
 			  (setf (cell xy) (nth pen pen-list)
 				(blt:layer) 0)
-			  (tick)))))
+			  (tick xdim ydim)))))
 	(blt:with-terminal 
 	  (when typeface (blt:set "font: ~A, size=10" typeface))
 	  (setf (blt:color) (blt:rgba 120 160 120))
@@ -59,14 +61,11 @@
 	      (multiple-value-bind (xdim ydim lines) 
 		  (list-dims (uiop:read-file-lines savedmap))
 		(blt:set "window.size = ~AX~A" xdim ydim)
-		(dotimes (line ydim
-			       (progn (setf dimx xdim
-					    dimy ydim)
-				      (tick)))
+		(dotimes (line ydim (tick xdim ydim))
 		  (loop for pos to (1- (length (nth line lines))) do
 		    (setf (cell (complex pos line))
 			  (char (nth line lines) pos)))))
 	      (progn (blt:set "window.size = ~AX~A" dimx dimy)
-		     (dotimes (x dimx (tick))
+		     (dotimes (x dimx (tick dimx dimy))
 		       (dotimes (y dimy)
 			 (setf (cell (complex x y)) #\SPACE))))))))))
