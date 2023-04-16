@@ -13,7 +13,7 @@
 (defun draw-map (&key (dimx 76) (dimy 20) typeface savedmap
 		   (pen-list '(#\. #\# #\+ #\SPACE))
 		   (xy (complex (round dimx 2) (round dimy 2))))
-  "Draw a roguelike map of DIMX and DIMY dimensions, using characters in PEN-LIST, starting at complex coord XY, using TYPEFACE. All arguments are keyword-based with defaults (except TYPEFACE which doesn't need one---excelsior is built into BLT). Navigate with vim keys, press space to draw, f to erase and a or s to change character. When done, press Escape to get a printout of the map."
+  "Draw a roguelike map of DIMX and DIMY dimensions, using characters in PEN-LIST, starting at complex coord XY, using TYPEFACE and a SAVEDMAP. All arguments are optional and keyword-based with defaults (except TYPEFACE which doesn't need one---excelsior is built into BLT---and SAVEDMAP). Navigate with vim keys, press space to draw, f to erase and a or s to change character. When done, press Escape to get a print-out of the map."
   (let* ((pen 0)
 	 (pens (1- (length pen-list))))
     (macrolet ((cell (n) `(blt:cell-char (realpart ,n) (imagpart ,n))))
