@@ -37,7 +37,8 @@
 		 (cond ((eq xy 'quit)
 			(loop for y to (1- dimy) do
 			  (loop for x to (1- dimx) do
-			    (format t "~A" (blt:cell-char x y)))
+			    (format t "~A" (or (blt:cell-char x y)
+					       #\SPACE)))
 			  (terpri)))
 		       (t (setf (blt:layer) 1)
 			  (setf (cell xy) (nth pen pen-list)
@@ -45,6 +46,7 @@
 			  (tick)))))
 	(blt:with-terminal 
 	  (when typeface (blt:set "font: ~A, size=10" typeface))
+	  (blt:set "window.size = ~AX~A" dimx dimy)
 	  (setf (blt:color) (blt:rgba 120 160 120))
 	  (if savedmap
 	      (let* ((lines (uiop:read-file-lines savedmap))
