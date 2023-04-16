@@ -10,7 +10,7 @@
 ;;; (cffi:use-foreign-library blt:bearlibterminal)
 
 
-(defun draw-map (&key (dimx 76) (dimy 20) typeface
+(defun draw-map (&key (dimx 76) (dimy 20) typeface savedmap
 		   (pen-list '(#\. #\# #\+ #\SPACE))
 		   (xy (complex (round dimx 2) (round dimy 2))))
   "Draw a roguelike map of DIMX and DIMY dimensions, using characters in PEN-LIST, starting at complex coord XY, using TYPEFACE. All arguments are keyword-based with defaults (except TYPEFACE which doesn't need one---excelsior is built into BLT). Navigate with vim keys, press space to draw, f to erase and a or s to change character. When done, press Escape to get a printout of the map."
@@ -46,6 +46,19 @@
 	(blt:with-terminal 
 	  (when typeface (blt:set "font: ~A, size=10" typeface))
 	  (setf (blt:color) (blt:rgba 120 160 120))
-	  (dotimes (x dimx (tick))
-	    (dotimes (y dimy)
-	      (setf (cell (complex x y)) #\SPACE))))))))
+	  (if savedmap
+	      (let* ((lines (uiop:read-file-lines savedmap))
+		     (numlines (length lines))
+		     (maxlength 0))
+		(dotimes (line numlines 
+			       (progn (setf dimx maxlength
+					    dimy numlines)
+				      (tick)))
+		  (loop for pos to (1- (length (nth line lines))) do
+		    (setf (cell (complex pos line))
+			  (char (nth line lines) pos))
+		    finally (when (> pos maxlength) 
+			      (setf maxlength pos)))))
+	      (dotimes (x dimx (tick))
+		(dotimes (y dimy)
+		  (setf (cell (complex x y)) #\SPACE)))))))))
