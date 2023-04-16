@@ -10,6 +10,14 @@
 ;;; (cffi:use-foreign-library blt:bearlibterminal)
 
 
+(defun list-dims (list-o-strings)
+  (let ((count 0))
+    (dolist (line list-o-strings 
+		  (values count (length list-o-strings) list-o-strings))
+      (let ((stringcount (length line)))
+	(when (> stringcount count) (setf count stringcount))))))
+  
+
 (defun draw-map (&key (dimx 76) (dimy 20) typeface savedmap
 		   (pen-list '(#\. #\# #\+ #\SPACE))
 		   (xy (complex (round dimx 2) (round dimy 2))))
@@ -46,21 +54,19 @@
 			  (tick)))))
 	(blt:with-terminal 
 	  (when typeface (blt:set "font: ~A, size=10" typeface))
-	  (blt:set "window.size = ~AX~A" dimx dimy)
 	  (setf (blt:color) (blt:rgba 120 160 120))
 	  (if savedmap
-	      (let* ((lines (uiop:read-file-lines savedmap))
-		     (numlines (length lines))
-		     (maxlength 0))
-		(dotimes (line numlines 
-			       (progn (setf dimx maxlength
-					    dimy numlines)
+	      (multiple-value-bind (xdim ydim lines) 
+		  (list-dims (uiop:read-file-lines savedmap))
+		(blt:set "window.size = ~AX~A" xdim ydim)
+		(dotimes (line ydim
+			       (progn (setf dimx xdim
+					    dimy ydim)
 				      (tick)))
 		  (loop for pos to (1- (length (nth line lines))) do
 		    (setf (cell (complex pos line))
-			  (char (nth line lines) pos))
-		    finally (when (> pos maxlength) 
-			      (setf maxlength pos)))))
-	      (dotimes (x dimx (tick))
-		(dotimes (y dimy)
-		  (setf (cell (complex x y)) #\SPACE)))))))))
+			  (char (nth line lines) pos)))))
+	      (progn (blt:set "window.size = ~AX~A" dimx dimy)
+		     (dotimes (x dimx (tick))
+		       (dotimes (y dimy)
+			 (setf (cell (complex x y)) #\SPACE))))))))))
