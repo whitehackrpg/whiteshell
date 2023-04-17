@@ -1,5 +1,7 @@
 ;;;; Whiteshell tasks and attacks roller
 
+(in-package #:whiteshell)
+
 (defun attack (score defense &rest mods)
   "Roll a d20 against SCORE and DEFENSE with any number of MODS, returning quality and result category."
   (let* ((d20 (1+ (random 20)))

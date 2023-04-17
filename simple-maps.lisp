@@ -1,4 +1,6 @@
-;;;; Print a simple, random map structure that you can populate with stuff yourself.
+;;;; print-map prints a simple, random map structure that you can populate with stuff yourself.
+
+(in-package #:whiteshell)
 
 (defparameter *surr* (list #C( 0 -1) #C(0  1) #C(-1  0) #C(1  0)
 			   #C(-1 -1) #C(1 -1) #C(-1  1) #C(1  1))
@@ -75,14 +77,14 @@
 (defun transform-char (x y map)
   "Only return the map character if it is near a floor tile."
   (let ((count 0))
-    (loop for mod in *surr* do
+    (dolist (mod *surr*)
       (when (eq (gethash (+ mod (complex x y)) map) #\.) (incf count)))
     (if (zerop count) #\SPACE (gethash (complex x y) map))))
     
     
 (defun print-map (&optional (xdim 80) (ydim 20) (map (mkmap xdim ydim)))
   "Print a random map."
-  (loop for y to (1- ydim) do
-    (loop for x to (1- xdim) do
-      (princ (transform-char x y map)))
-    (terpri)))
+  (dotimes (y ydim)
+    (dotimes (x xdim (terpri))
+      (princ (transform-char x y map)))))
+
