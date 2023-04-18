@@ -14,7 +14,11 @@ Then:
 
 Now you can use the functions in the REPL:
 
-https://github.com/whitehackrpg/whiteshell/blob/main/show-whiteshell.mp4
+
+
+https://user-images.githubusercontent.com/130791778/232888799-ddee4e4a-3497-476b-865c-492487404f72.mp4
+
+
 
 Alternatively, make a simple script to use via bash from the command line. For example:
 
