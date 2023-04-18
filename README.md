@@ -12,7 +12,9 @@ Then:
 (in-package :whiteshell)
 ```
 
-Now you can use the functions in the REPL.
+Now you can use the functions in the REPL:
+
+https://github.com/whitehackrpg/whiteshell/blob/main/show-whiteshell.mp4
 
 Alternatively, make a simple script to use via bash from the command line. For example:
 
