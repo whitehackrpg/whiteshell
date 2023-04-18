@@ -1,5 +1,5 @@
 # whiteshell
-A repository for a shell with [Whitehack RPG] (https://whitehackrpg.wordpress.com/) tools.
+A repository for a shell with [Whitehack RPG](https://whitehackrpg.wordpress.com/) tools.
 
 * Clone the repository and softlink it in your quicklisp/local-projects directory. 
 * Do the same with Steve Losh's CL-BLT (https://docs.stevelosh.com/cl-blt/). 
