@@ -5,25 +5,23 @@
 (defparameter *dimx* 76)
 (defparameter *dimy* 24)
 (defparameter *pen-list* 
-  '((#\# #\. #\+ #\/ #\< #\> #\^ #\* #\~ #\! #\$ #\% #\& #\?)
+  '((#\# #\SPACE #\. #\+ #\/ #\< #\> #\^ #\* #\~ #\! #\$ #\% #\& #\?)
     (#\U+2550 #\U+2551 #\U+2554 #\U+2557 #\U+255A #\U+255D)
     (#\U+2560 #\U+2563 #\U+2566 #\U+2569 #\U+256C #\U+256A #\U+256B)
     (#\U+2552 #\U+2553 #\U+2555 #\U+2556 #\U+2558 #\U+2559
      #\U+255B #\U+255C #\U+255E #\U+255F #\U+2561 #\U+2562
      #\U+2564 #\U+2565 #\U+2567 #\U+2568)
+    (#\U+2500 #\U2502  #\U+250C #\U+2510 #\U+2514 #\U+2518)
     (#\a #\b #\c #\d #\e #\f #\g #\h #\i #\j #\k #\l #\m #\n #\o #\p #\q #\r 
      #\s #\t #\u #\v #\w #\x #\y #\z)
     (#\A #\B #\C #\D #\E #\F #\G #\H #\I #\J #\K #\L #\M #\N #\O #\P #\Q #\R
      #\S #\T #\U #\V #\W #\X #\Y #\Z)))
 
-(defparameter *instructions* (format nil "~&~AINSTRUCTIONS~&------------~&Navigation: H/J/K/L/Y/U/B/N~&Draw: space or left-click~&Delete: d or right-click~&Undo: z~&Redo: r~&Switch pen: scroll-wheel or a (left) and f (right)~&Switch pen-set: g or middle-click~&Print to REPL: s~&Print instructions: i~&Quit: escape (also prints to the REPL)~&~ACall draw-map with the keyword argument ':savedmap' to start with a saved map (text format), and/or ':pen-list' to add a custom pen-set (formatted as a list of characters).~&~A" #\linefeed #\linefeed #\linefeed))
+(defparameter *instructions* (format nil "~%INSTRUCTIONS~%------------~%Navigation: H/J/K/L/Y/U/B/N or mouse~%Draw: space or left-click~%Delete: d or right-click~%Undo: z~%Redo: r~%Outline: w (and then move mouse)~%Paint: p (and then move mouse)~%Switch pen: scroll-wheel or a (left) and f (right)~%Switch pen-set: g or middle-click~%Print to REPL: s~%Print instructions: i~%Quit: escape (also prints to the REPL)~%~%Call draw-map with the keyword argument ':savedmap' to start with a saved map (text format), and/or ':extra-pens' to add a custom pen-set (formatted as a list of characters).~%~%Error and support messages are printed directly to the REPL.~%~%" ))
 (defparameter *font* (asdf:system-relative-pathname "whiteshell" "fonts/RobotoMono-Regular.ttf"))
 (defparameter *font-size* 13)
 (defparameter *default-color* (blt:rgba 110 160 110))
 (defparameter *highlight-color* (blt:rgba 210 250 210))
-
-(defparameter *undo* ())
-(defparameter *redo* ())
 
 (defun list-dims (list-o-strings)
   "Return the x and y dimensions of a list of strings, and the list."
@@ -39,25 +37,81 @@
 (defun mouse-wheel ()
   (blt/ll:terminal-state blt/ll:+tk-mouse-wheel+))
 
-(defun map-action (xy char)
-  (push (list (cons xy char) 
-	      (cons xy (blt:cell-char (realpart xy) (imagpart xy))))
-	*undo*)
-  (setf (cell xy) char
-	*redo* ()))
-  
-(defun undo ()
-  (let ((action (pop *undo*)))
-    (unless (null action)
-      (push action *redo*)
-      (setf (cell (caadr action)) (cdadr action)))))
+(defun mouse-move ()
+  (blt/ll:terminal-state blt/ll:+tk-mouse-move+))
 
-(defun redo ()
-  (let ((action (pop *redo*)))
-    (unless (null action)
-      (push action *undo*)
-      (setf (cell (caar action)) (cdar action)))))
+(let ((undo ())
+      (redo ()))
+  (defun map-action (xy char &optional no-draw)
+    (push (list (cons xy char) 
+		(cons xy (blt:cell-char (realpart xy) (imagpart xy))))
+	  undo)
+    (unless no-draw (setf (cell xy) char))
+    (setf redo ()))
   
+  (defun undo ()
+    (let ((action (pop undo)))
+      (unless (null action)
+	(push action redo)
+	(setf (cell (caadr action)) (cdadr action)))))
+
+  (defun redo ()
+    (let ((action (pop redo)))
+      (unless (null action)
+	(push action undo)
+	(setf (cell (caar action)) (cdar action))))))
+  
+(defun paint (char)
+  (blt:print 0 0 "Press 'p' to finish the painting.")
+  (when (and (mouse-move)
+	     (eq (blt:cell-char (blt:mouse-x) (blt:mouse-y)) #\SPACE))
+    (map-action (complex (blt:mouse-x) (blt:mouse-y)) char))
+  (blt:refresh)
+  (if (blt:key-case (blt:read) (:p))
+      (blt:print 0 0 "                                 ")
+      (paint char)))
+
+(defun outline (hash pen-type &optional oldxy)
+  (blt:print 0 0 "Press 'w' to finish the outline.")
+  (when (and (mouse-move)
+	     (eq (blt:cell-char (blt:mouse-x) (blt:mouse-y)) #\SPACE))
+    (let ((newxy (complex (blt:mouse-x) (blt:mouse-y))))
+      (setf (gethash newxy hash) #\#)
+      (loop for coord being the hash-keys in hash using (hash-value tile) do
+	(setf (gethash coord hash) (prettify coord hash pen-type)))
+      (when oldxy
+	(map-action oldxy (gethash oldxy hash) t))
+      (setf oldxy newxy)))
+  (setf (blt:layer) 2)
+  (loop for coord being the hash-keys in hash using (hash-value tile) do
+    (setf (blt:cell-char (realpart coord) (imagpart coord)) tile))
+  (blt:refresh)
+  (cond ((blt:key-case (blt:read) 
+		       (:w))
+	 (blt:clear-layer)
+	 (setf (blt:layer) 0)
+	 (blt:print 0 0 "                                ")
+	 (loop for coord being the hash-keys in hash 
+		 using (hash-value tile) do
+	  	   (setf (blt:cell-char (realpart coord) 
+					(imagpart coord)) 
+			 tile)))
+	(t (setf (blt:layer) 0)
+	   (outline hash pen-type oldxy))))
+
+(defun prettify (coord hash pen-type)
+  (let ((n (gethash (+ coord #C(0 -1)) hash))
+	(s (gethash (+ coord #C(0 1)) hash))
+	(w (gethash (+ coord #C(-1 0)) hash))
+	(e (gethash (+ coord #C(1 0)) hash)))
+    (cond
+      ((and n s) (nth 1 pen-type))
+      ((and w e) (nth 0 pen-type))
+      ((and n w) (nth 5 pen-type))
+      ((and n e) (nth 4 pen-type))
+      ((and s w) (nth 3 pen-type))
+      ((and s e) (nth 2 pen-type))
+      (t #\U+2022))))
 
 (defun tick (xy pen-set pen extra-pens)
   (let* ((pen-list (if extra-pens (cons extra-pens *pen-list*) *pen-list*))
@@ -81,6 +135,7 @@
 	(when (> pen (1- (length (nth pen-set pen-list))))
 	  (setf pen 0)))
        (:s (print-it))
+       (:p (paint (nth pen (nth pen-set pen-list))))
        (:space (map-action xy (nth pen (nth pen-set pen-list))))
        (:mouse-left (map-action (complex (blt:mouse-x) (blt:mouse-y))
 				(nth pen (nth pen-set pen-list))))
@@ -91,6 +146,10 @@
        (:h (incf xy #C(-1  0))) (:l (incf xy #C(1  0)))
        (:y (incf xy #C(-1 -1))) (:u (incf xy #C(1 -1)))
        (:i (format t "~&~A" *instructions*))
+       (:w (if (or (= pen-set 1)
+		     (= pen-set 4))
+	     (outline (make-hash-table) (nth pen-set *pen-list*))
+	     (format t "You need to pick pen-set 1 or 4 first.~%")))
        (:z (undo))
        (:r (redo))
        (:b (incf xy #C(-1  1))) (:n (incf xy #C(1  1))))
