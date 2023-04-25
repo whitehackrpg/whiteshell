@@ -36,9 +36,7 @@
 		 (hp-roller class (1- level) print)))))))
   
 
-(defun average-hp (class level &optional (times 1000))
-  (values (round (loop for n from 1 to times
-		       sum (hp-roller class level))
-		 times)))
 	
-    
+(defun average-hp (class level &optional (times 1000))
+  (average (hp-roller class level) times))
+

@@ -13,4 +13,8 @@
   (let* ((thelist (if (listp input) input (uiop:read-file-lines input)))
 	 (pick (nth (random (length thelist)) thelist)))
     (if pretty (format t "~a" pick) pick)))
-    
+
+(defmacro average (expr &optional (times 1000))
+  `(values (round (loop for n from 1 to ,times
+			sum ,expr)
+		  ,times)))    
