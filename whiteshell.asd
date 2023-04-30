@@ -10,5 +10,6 @@
 	       (:file "tasks-attacks-roller")
 	       (:file "simple-maps")
 	       (:file "draw-your-map")
-	       (:file "whiteshell")))
+	       (:file "whiteshell")
+	       (:file "hp-roller")))
 
