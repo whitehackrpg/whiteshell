@@ -2,11 +2,10 @@
 
 (in-package #:whiteshell)
 
-;;; If on Windows:
-;;; (cffi:define-foreign-library blt:bearlibterminal
-;;;   (t "./BearLibTerminal.dll"))
-;;; (cffi:use-foreign-library blt:bearlibterminal)
-
+#+win32
+(progn (cffi:define-foreign-library blt:bearlibterminal
+	 (t "./BearLibTerminal.dll"))
+       (cffi:use-foreign-library blt:bearlibterminal))
 
 (defun random-item (input &optional pretty)
   "Return or print a random item either from a file with a list or an actual Lisp list."
@@ -18,3 +17,16 @@
   `(values (round (loop for n from 1 to ,times
 			sum ,expr)
 		  ,times)))    
+
+(defun weak-repl ()
+  (let* ((commands (list 'average-hp 'hp-roller 'print-map 'quit 
+			 'draw-map 'at 'dat 'tr '+dtr '-dtr))
+	 (inp (read-from-string 
+	       (concatenate 'string "(" (read-line) ")")))
+	 (input (cons (car inp) (mapcar #'(lambda (a) `',a) (cdr inp)))))
+    (cond ((member (car input) commands)
+	   (unless (eq (car input) 'quit)
+	     (format t "~{~a ~}~%" (multiple-value-list (eval input)))
+	     (weak-repl)))
+	  (t (format t "Allowed commands:~{ ~a~}.~%" commands) 
+	     (weak-repl)))))
