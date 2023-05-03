@@ -25,7 +25,7 @@
 	 (inp (read-from-string (format nil "(~a)" (read-line))))
 	 (input (cons (car inp) (mapcar #'(lambda (a) `',a) (cdr inp)))))
     (cond ((member (car input) commands)
-	   (unless (eq (car input) 'quit)
+	   (unless (and (eq (car input) 'quit) (print 'bye!))
 	     (format t "~{~a ~}~%" (multiple-value-list (eval input)))
 	     (weak-repl)))
 	  (t (format t "Allowed commands:~{ ~a~}.~%" commands) 
