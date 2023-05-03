@@ -22,8 +22,7 @@
 (defun weak-repl ()
   (let* ((commands (list 'average-hp 'hp-roller 'print-map 'quit 
 			 'draw-map 'at 'dat 'tr '+dtr '-dtr))
-	 (inp (read-from-string 
-	       (concatenate 'string "(whiteshell::" (read-line) ")")))
+	 (inp (read-from-string (format nil "(~a)" (read-line))))
 	 (input (cons (car inp) (mapcar #'(lambda (a) `',a) (cdr inp)))))
     (cond ((member (car input) commands)
 	   (unless (eq (car input) 'quit)
