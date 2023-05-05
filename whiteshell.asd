@@ -12,5 +12,6 @@
 	       (:file "draw-your-map")
 	       (:file "whiteshell")
 	       (:file "hp-roller")
-	       (:file "read-org-tables")))
+	       (:file "read-org-tables")
+	       (:file "damage-roller")))
 
