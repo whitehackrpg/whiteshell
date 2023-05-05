@@ -18,15 +18,21 @@
 			sum ,expr)
 		  ,times)))    
 
-
 (defun weak-repl ()
-  (let* ((commands '(average-hp hp-roller print-map quit 
-			 draw-map at dat tr +dtr -dtr))
-	 (inp (read-from-string (format nil "(~a)" (read-line))))
-	 (input (cons (car inp) (mapcar #'(lambda (a) `',a) (cdr inp)))))
-    (cond ((member (car input) commands)
-	   (unless (and (eq (car input) 'quit) (print 'bye!))
-	     (format t "~{~a ~}~%" (multiple-value-list (eval input)))
-	     (weak-repl)))
-	  (t (format t "Allowed commands:~{ ~a~}.~%" commands) 
-	     (weak-repl)))))
+  (flet ((illegalp (str) 
+	   (intersection (coerce str 'list) '(#\( #\) #\' #\, #\`))))
+    (let* ((commands '(average-hp hp-roller print-map quit 
+		       draw-map at dat tr +dtr -dtr))
+	   (str (read-line))
+	   (inp (if (illegalp str) 
+		    '(bad) 
+		    (read-from-string (format nil "(~a)" str))))
+	   (input (cons (car inp) 
+			(mapcar #'(lambda (a) `',a) (cdr inp)))))
+      (cond ((member (car input) commands)
+	     (unless (and (eq (car input) 'quit) (print 'bye!))
+	       (format t "~{~a ~}~%" (multiple-value-list (eval input)))
+	       (weak-repl)))
+	    (t (format t "Allowed commands:~{ ~a~}.~%" commands) 
+	       (weak-repl))))))
+  
