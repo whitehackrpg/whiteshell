@@ -22,7 +22,7 @@
   (flet ((illegalp (str) 
 	   (intersection (coerce str 'list) '(#\( #\) #\' #\, #\`))))
     (let* ((commands (append '(average-hp hp-roller print-map quit 
-			       draw-map at dat tr +dtr -dtr)
+			       draw-map a d r +dr -dr)
 			     (loop for n to 30 collect n)))
 	   (str (read-line))
 	   (inp (if (illegalp str) 
@@ -34,7 +34,7 @@
 	     (unless (and (eq (car input) 'quit) (print 'bye!))
 	       (format t "~{~a ~}~%" (multiple-value-list 
 				      (eval (if (numberp (car input))
-						(cons 'at input)
+						(cons 'a input)
 						input))))
 	       (weak-repl)))
 	    (t (format t "Allowed commands:~{ ~a~}.~%" commands) 

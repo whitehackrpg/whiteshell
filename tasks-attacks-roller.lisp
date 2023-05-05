@@ -56,23 +56,24 @@
 	(apply #'attack score defense mods)
       (compare-rolls kind q1 r1 q2 r2))))
 
-(defun at (score defense &rest mods)
+(defun a (score defense &rest mods)
   "Shortcut for an attack."
-  (apply #'attack score defense mods))
+  (multiple-value-call #'consequences (apply #'attack score defense mods)))
 
-(defun dat (score defense &rest mods)
+(defun d (score defense &rest mods)
   "Shortcut for a double attack."
-  (apply #'double-attack 'positive score defense mods))
+  (multiple-value-call #'consequences 
+    (apply #'double-attack 'positive score defense mods)))
 
-(defun tr (score &rest mods)
+(defun r (score &rest mods)
   "Shortcut for a regular taskroll."
   (apply #'attack score 0 mods))
 
-(defun +dtr (score &rest mods)
+(defun +dr (score &rest mods)
   "Shortcut for a positive double taskroll."
   (apply #'double-attack 'positive score 0 mods))
 
-(defun -dtr (score &rest mods)
+(defun -dr (score &rest mods)
   "Shortcut for a negative double taskroll."
   (apply #'double-attack 'negative score 0 mods))
 
