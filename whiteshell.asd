@@ -5,7 +5,7 @@
   :author "Christian Mehrstam <whitehackrpg@gmail.com>"
   :license  "MIT for the actual code. Standard copyright all rights reserved for any Whitehack content."
   :serial t
-  :depends-on (#:cl-blt)
+  :depends-on ()
   :components ((:file "package")
 	       (:file "tasks-attacks-roller")
 	       (:file "simple-maps")
