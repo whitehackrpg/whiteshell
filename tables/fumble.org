@@ -1,0 +1,8 @@
+| *d6* | *The character('s) ...*                         |
+|------+-------------------------------------------------|
+|    1 | Weapon breaks. It can be mended.                |
+|    2 | Armor or shield breaks. They can be mended.     |
+|    3 | Weapon drops or gets stuck (player choice).     |
+|    4 | Staggers and gets 2 rounds of halved movement.  |
+|    5 | Attacks the nearest ally (make an attack roll). |
+|    6 | Hits herself---roll damage!                     |

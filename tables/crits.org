@@ -1,0 +1,22 @@
+| *d20* | *The target('s) ...*                             |
+|-------+--------------------------------------------------|
+|     1 | Weapon flies 10 ft away.                         |
+|     2 | Shield drops 5 ft away.                          |
+|     3 | Weapon breaks. It can be mended.                 |
+|     4 | Shield is ruined.                                |
+|     5 | Armor loses d6 DF. It can be mended.             |
+|     6 | Is hurt and gets halved movement.                |
+|     7 | Speech is impossible for 10 minutes.             |
+|     8 | Screams at the top of her lungs.                 |
+|     9 | Is blinded for 10 min. Related actions are -10.  |
+|    10 | Is laid flat on the ground a few steps away.     |
+|    11 | Must save or attempt to flee.                    |
+|    12 | Is deaf for 10 minutes.                          |
+|    13 | Starts to bleed. +1 damage every round.          |
+|    14 | Takes an additional d6 damage.                   |
+|    15 | Is stunned for 2 rounds: MV 5, -4 DF.            |
+|    16 | Is confused. Must save or attack nearest ally.   |
+|    17 | Must save or attack an ally and attempt to flee. |
+|    18 | Is shocked and defenseless until rested.         |
+|    19 | Is knocked out at -1 HP or less.                 |
+|    20 | Meets a gory death. Allies check morale.         |
