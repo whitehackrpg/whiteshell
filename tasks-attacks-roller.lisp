@@ -11,7 +11,7 @@
 	   (values (+ d20 surplus) 'plink))
 	   ((= d20 20)
 	   (values 20.0 (if (zerop surplus) 'fumble 'failure)))
-	  ((and (= d20 19) (not (zerop surplus)))
+	  ((and (= d20 19) (>= score 20))
 	   (values (+ d20 surplus) 'crit))
 	  ((< d20 target)
 	   (values (+ d20 surplus) 'success))

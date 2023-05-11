@@ -9,7 +9,6 @@
   :components ((:file "package")
 	       (:file "tasks-attacks-roller")
 	       (:file "simple-maps")
-	       (:file "draw-your-map")
 	       (:file "whiteshell")
 	       (:file "hp-roller")
 	       (:file "read-org-tables")

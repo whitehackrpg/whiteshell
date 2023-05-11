@@ -22,7 +22,7 @@
   (flet ((illegalp (str) 
 	   (intersection (coerce str 'list) '(#\( #\) #\' #\, #\`))))
     (let* ((commands (append '(average-hp hp-roller print-map quit 
-			       draw-map a d r +dr -dr)
+			       a d r +dr -dr monster)
 			     (loop for n to 30 collect n)))
 	   (str (read-line))
 	   (inp (if (illegalp str) 
