@@ -57,3 +57,9 @@ In this case it will give you something like:
                  #......#                           #######......#              
                  ########                                 ########   
 ```
+A third alternative is to generate a stand-alone executable. Launch sbcl and do:
+
+* `(ql:quickload :whiteshell)`
+* `(sb-ext:save-lisp-and-die #p"name-of-executable" :toplevel #'whiteshell:bot :executable t)`
+
+Once an executable has been generate, you can call it like so: `./name-of-executable whiteshell::command arg1 arg2 etc`
