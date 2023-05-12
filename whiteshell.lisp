@@ -51,17 +51,14 @@
     (if (and (member (car args)
 		     '("whiteshell::average-hp" "whiteshell::hp-roller"
 		       "whiteshell::print-map" "whiteshell::quit"
-		       "whiteshell::a" "whiteshell::d" "whiteshell::r"
-		       "whiteshell::+dr" "whiteshell::-dr" 
-		       "whiteshell::monster") 
+		       "whiteshell::r" "whiteshell::+dr" "whiteshell::-dr" 
+		       "whiteshell::a" "whiteshell::d" "whiteshell::monster") 
 		     :test #'string=)
 	     (null (intersection '(#\( #\) #\' #\, #\`) 
-				 (coerce (format nil "~{~a~^ ~}"
-						 args)
-					 'list))))
+				 (coerce (format nil "~{~a~^ ~}" args) 'list))))
 	(let ((output (apply (read-from-string 
 			      (car args))
 			     (mapcar #'read-from-string 
 				     (cdr args)))))
 	  (when output (print output) (terpri)))
-	(format t "Not allowed~%"))))
+	(format t "Not allowed.~%"))))
