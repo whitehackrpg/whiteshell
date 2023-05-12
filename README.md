@@ -10,7 +10,8 @@ Clone the repository and softlink it in your quicklisp/local-projects directory.
 
 Now you can use the functions in the REPL:
 
-Video coming shortly.
+https://github.com/whitehackrpg/whiteshell/assets/130791778/6c9208e2-7df9-430f-a4e2-369d53103685
+
 
 Alternatively, make a simple script to use via bash from the command line. For example:
 
