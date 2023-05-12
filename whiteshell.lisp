@@ -47,19 +47,21 @@
   
 (defun bot ()
   (setf *random-state* (make-random-state t))
-  (if (and (member (car (uiop:command-line-arguments))
-		   '("whiteshell::average-hp" "whiteshell::hp-roller"
-		     "whiteshell::print-map" "whiteshell::quit"
-		     "whiteshell::a" "whiteshell::d" "whiteshell::r"
-		     "whiteshell::+dr" "whiteshell::-dr" "whiteshell::monster") 
-		   :test #'equalp)
-	   (null (intersection '(#\( #\) #\' #\, #\`) 
-			       (coerce (format nil "~{~a~^ ~}"
-					       (uiop:command-line-arguments))
-				       'list))))
-      (let ((output (apply (read-from-string 
-			    (car (uiop:command-line-arguments)))
-			   (mapcar #'read-from-string 
-				   (cdr (uiop:command-line-arguments))))))
-	(when output (print output) (terpri)))
-      (format t "Not allowed~%")))
+  (let ((args (uiop:command-line-arguments)))
+    (if (and (member (car args)
+		     '("whiteshell::average-hp" "whiteshell::hp-roller"
+		       "whiteshell::print-map" "whiteshell::quit"
+		       "whiteshell::a" "whiteshell::d" "whiteshell::r"
+		       "whiteshell::+dr" "whiteshell::-dr" 
+		       "whiteshell::monster") 
+		     :test #'string=)
+	     (null (intersection '(#\( #\) #\' #\, #\`) 
+				 (coerce (format nil "~{~a~^ ~}"
+						 args)
+					 'list))))
+	(let ((output (apply (read-from-string 
+			      (car args))
+			     (mapcar #'read-from-string 
+				     (cdr args)))))
+	  (when output (print output) (terpri)))
+	(format t "Not allowed~%"))))
