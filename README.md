@@ -1,11 +1,7 @@
 # whiteshell
 A repository for a shell with [Whitehack RPG](https://whitehackrpg.wordpress.com/) tools.
 
-* Clone the repository and softlink it in your quicklisp/local-projects directory. 
-* Do the same with Steve Losh's CL-BLT (https://docs.stevelosh.com/cl-blt/). 
-* Install BearLibTerminal on your computer (https://github.com/tommyettinger/BearLibTerminal). 
-
-Then:
+Clone the repository and softlink it in your quicklisp/local-projects directory. Then:
 
 ```
 (ql:quickload :whiteshell)
@@ -14,15 +10,7 @@ Then:
 
 Now you can use the functions in the REPL:
 
-
-
-
-
-https://user-images.githubusercontent.com/130791778/235418561-29cb987e-004c-453c-b4be-7990cabe8d8c.mp4
-
-
-
-
+Video coming shortly.
 
 Alternatively, make a simple script to use via bash from the command line. For example:
 
@@ -44,7 +32,7 @@ Then make the script executable and run it:
 chmod +x yourscript.lisp
 ./yourscript.lisp
 ```
-Which will give you something like:
+In this case it will give you something like:
 
 ```
                                            ########                             
