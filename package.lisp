@@ -1,4 +1,6 @@
 ;;;; package.lisp
 
 (defpackage #:whiteshell
-  (:use #:cl))
+  (:use #:cl)
+  (:export :bot))
+

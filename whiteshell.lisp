@@ -18,7 +18,12 @@
 			sum ,expr)
 		  ,times)))    
 
+(defun whiteshell ()
+  (format t "Welcome to the Whiteshell REPL. Type 'i' for commands.~%")
+  (weak-repl))
+
 (defun weak-repl ()
+  (format t "> ")
   (flet ((illegalp (str) 
 	   (intersection (coerce str 'list) '(#\( #\) #\' #\, #\`))))
     (let* ((commands (append '(average-hp hp-roller print-map quit 
@@ -40,3 +45,21 @@
 	    (t (format t "Allowed commands:~{ ~a~}.~%" commands) 
 	       (weak-repl))))))
   
+(defun bot ()
+  (setf *random-state* (make-random-state t))
+  (if (and (member (car (uiop:command-line-arguments))
+		   '("whiteshell::average-hp" "whiteshell::hp-roller"
+		     "whiteshell::print-map" "whiteshell::quit"
+		     "whiteshell::a" "whiteshell::d" "whiteshell::r"
+		     "whiteshell::+dr" "whiteshell::-dr" "whiteshell::monster") 
+		   :test #'equalp)
+	   (null (intersection '(#\( #\) #\' #\, #\`) 
+			       (coerce (format nil "~{~a~^ ~}"
+					       (uiop:command-line-arguments))
+				       'list))))
+      (let ((output (apply (read-from-string 
+			    (car (uiop:command-line-arguments)))
+			   (mapcar #'read-from-string 
+				   (cdr (uiop:command-line-arguments))))))
+	(when output (print output) (terpri)))
+      (format t "Not allowed~%")))

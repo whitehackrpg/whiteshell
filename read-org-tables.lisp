@@ -2,15 +2,6 @@
 
 (in-package #:whiteshell)
 
-(defparameter *monstertable* (cddr (read-org-table (asdf:system-relative-pathname "whiteshell" "tables/monsters.org"))))
-
-(defun read-org-table (file)
-  (mapcar #'(lambda (line) (remove-if #'(lambda (n) 
-					  (equal n "")) 
-				      (uiop:split-string 
-				       (strip-from-string line #\|))))
-	  (uiop:read-file-lines file)))
-
 (defun strip-from-string (string &rest things)
   (do* ((thing (pop things) (pop things))
        (result (remove thing string :test #'equal) 
@@ -20,6 +11,17 @@
 
 (defun locate-entry (entry list)
   (find-if #'(lambda (n) (equalp entry (car n))) list))
+
+(defun read-org-table (file)
+  (mapcar #'(lambda (line) (remove-if #'(lambda (n) 
+					  (equal n "")) 
+				      (uiop:split-string 
+				       (strip-from-string line #\|))))
+	  (uiop:read-file-lines file)))
+
+(defparameter *monstertable* (cddr (read-org-table (asdf:system-relative-pathname "whiteshell" "tables/monsters.org"))))
+
+
 
 (defun monster (entry &optional (list *monstertable*))
   (let* ((themob (locate-entry (write-to-string entry) list))
