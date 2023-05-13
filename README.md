@@ -12,7 +12,15 @@ Now you can use the functions in the REPL:
 
 https://github.com/whitehackrpg/whiteshell/assets/130791778/6c9208e2-7df9-430f-a4e2-369d53103685
 
+In the above video, Whiteshell runs from an advanced SLIME repl in Emacs. That isn't necessary. You can just as well simply install sbcl (http://sbcl.org/) and quicklisp (https://www.quicklisp.org/beta/) and then use `rlwrap` to run Whiteshell comfortably in your regular shell:
 
+```
+rlwrap sbcl
+; In sbcl:
+(ql:quickload :whiteshell)
+(in-package :whiteshell)
+(whiteshell)
+```
 Alternatively, make a simple script to use via bash from the command line. For example:
 
 1. Install sbcl somewhere (default /usr/local).
