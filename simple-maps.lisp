@@ -81,10 +81,21 @@
       (when (eq (gethash (+ mod (complex x y)) map) #\.) (incf count)))
     (if (zerop count) #\SPACE (gethash (complex x y) map))))
     
-    
-(defun print-map (&optional (xdim 80) (ydim 20) (map (mkmap xdim ydim)))
-  "Print a random map."
+(defun transform-map (map)
+  (loop for coord being the hash-keys in map do
+    (setf (gethash coord map) 
+	  (transform-char (realpart coord) (imagpart coord) map))
+	finally (return map)))
+
+(defun print-map2 (xdim ydim map)
   (dotimes (y ydim)
     (dotimes (x xdim (terpri))
-      (princ (transform-char x y map)))))
+      (princ (gethash (complex x y) map)))))
 
+(defun print-map (&optional (xdim 40) (ydim 20) (map (mkmap xdim ydim)))
+  "Print a random map."
+  (with-output-to-string (stream)
+    (princ (format nil "```~%") stream)
+    (dotimes (y ydim (princ (format nil "```") stream))
+      (dotimes (x xdim (princ (format nil "~%") stream))
+	(princ (transform-char x y map) stream)))))

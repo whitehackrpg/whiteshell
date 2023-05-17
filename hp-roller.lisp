@@ -19,11 +19,10 @@
 		  (#C(1 2) #C(2 2) #C(3 2) 4 5 6 7 8 9 10))))
   
   (defun hp-roller (class level &optional print)
-    (let ((hp-list (case class
-		     (strong 1)
-		     (wise 2)
-		     (brave 3)
-		     (t 0))))
+    (let ((hp-list (cond ((equalp (write-to-string class) "strong") 1)
+			 ((equalp (write-to-string class) "wise") 2)
+			 ((equalp (write-to-string class) "brave") 3)
+			 (t 0))))
       (if (zerop level)
 	  0
 	  (let ((thisroll (nth (1- level) (nth hp-list class-hp))))
@@ -35,8 +34,6 @@
 		       (t (nd6 thisroll 0 print)))
 		 (hp-roller class (1- level) print)))))))
   
-
-	
 (defun average-hp (class level &optional (times 1000))
   (average (hp-roller class level) times))
 

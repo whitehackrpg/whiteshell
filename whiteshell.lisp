@@ -17,6 +17,8 @@
   `(values (round (loop for n from 1 to ,times
 			sum ,expr)
 		  ,times)))    
+(defun div (a b)
+  (float (/ a b)))
 
 (defun whiteshell ()
   (format t "Welcome to the Whiteshell REPL. Type 'i' for commands.~%")

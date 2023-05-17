@@ -67,14 +67,19 @@
 
 (defun r (score &rest mods)
   "Shortcut for a regular taskroll."
-  (apply #'attack score 0 mods))
+   (format nil "~{~a~^ ~}"  
+	  (multiple-value-list (apply #'attack score 0 mods))))
 
 (defun +dr (score &rest mods)
   "Shortcut for a positive double taskroll."
-  (apply #'double-attack 'positive score 0 mods))
+  (format nil "~{~a~^ ~}"
+	  (multiple-value-list 
+	   (apply #'double-attack 'positive score 0 mods))))
 
 (defun -dr (score &rest mods)
   "Shortcut for a negative double taskroll."
-  (apply #'double-attack 'negative score 0 mods))
+  (format nil "~{~a~^ ~}"
+	  (multiple-value-list 
+	   (apply #'double-attack 'negative score 0 mods))))
 
 
